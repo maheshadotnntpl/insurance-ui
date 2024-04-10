@@ -32,7 +32,7 @@ export const CalculatePremium = () => {
         if (customer.occupation) {
             onCalculatePremium();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customer.occupation]);
 
     const customerRequiredFields = {
@@ -101,7 +101,7 @@ export const CalculatePremium = () => {
         if (selectedDate != null) {
             setCustomer({ ...customer, "age": differenceInYears(new Date(), new Date(selectedDate)) })
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedDate]);
 
     return (
@@ -113,7 +113,17 @@ export const CalculatePremium = () => {
                             <Typography required>Name<span className='requiredAsterisk'>*</span></Typography>
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField name='name' error={customerError.includes("name")} fullWidth placeholder='Name' value={customer.name} onChange={(e) => { onValuesChange(e) }} />
+                            <TextField
+                                name='name'
+                                error={customerError.includes("name")}
+                                fullWidth
+                                value={customer.name}
+                                onChange={(e) => { onValuesChange(e) }}
+                                required
+                                autoComplete="name"
+                                autoFocus
+                                label='Name'
+                            />
                         </Grid>
                     </Grid>
                     <Grid container spacing={2} sx={{ p: '1rem', alignItems: 'center', display: 'flex' }}>
@@ -121,7 +131,15 @@ export const CalculatePremium = () => {
                             <Typography>Age<span className='requiredAsterisk'>*</span></Typography>
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField name='age' error={customerError.includes("age")} disabled fullWidth required placeholder='Age' value={customer.age} />
+                            <TextField
+                                name='age'
+                                error={customerError.includes("age")}
+                                disabled
+                                fullWidth
+                                required
+                                label='Age'
+                                value={customer.age}
+                            />
                         </Grid>
                     </Grid>
                     <Grid container spacing={2} sx={{ p: '1rem', alignItems: 'center', display: 'flex' }}>
@@ -131,7 +149,12 @@ export const CalculatePremium = () => {
                         <Grid item xs={4}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <div className="customDatePickerWidth">
-                                    <DatePicker name='dob' setError={customerError.includes("age")} value={selectedDate} onChange={newValue => { setSelectedDate(newValue) }}
+                                    <DatePicker
+                                        name='dob'
+                                        setError={customerError.includes("age")}
+                                        value={selectedDate}
+                                        label="Date Of Birth"
+                                        onChange={newValue => { setSelectedDate(newValue) }}
                                         slotProps={{ textField: { variant: 'outlined', error: customerError.includes("age") } }}
                                     />
                                 </div>
@@ -143,7 +166,15 @@ export const CalculatePremium = () => {
                             <Typography>Sum Assured<span className='requiredAsterisk'>*</span></Typography>
                         </Grid>
                         <Grid item xs={4}>
-                            <TextField type='number' error={customerError.includes("sumAssured")} name='sumAssured' fullWidth required placeholder='Sum Assured' value={customer.sumAssured === 0 ? '' : customer.sumAssured} onChange={(e) => { onValuesChange(e) }} />
+                            <TextField
+                                type='number'
+                                error={customerError.includes("sumAssured")}
+                                name='sumAssured'
+                                fullWidth
+                                required
+                                label='Sum Assured'
+                                value={customer.sumAssured === 0 ? '' : customer.sumAssured}
+                                onChange={(e) => { onValuesChange(e) }} />
                         </Grid>
                     </Grid>
                     <Grid container spacing={2} sx={{ p: '1rem', alignItems: 'center', display: 'flex' }}>
@@ -151,17 +182,17 @@ export const CalculatePremium = () => {
                             <Typography>Occupation<span className='requiredAsterisk'>*</span></Typography>
                         </Grid>
                         <Grid item xs={4}>
-                            <Select fullWidth
+                            <Select
+                                fullWidth
                                 value={customer.occupation}
                                 label="Occupation"
                                 name='occupation'
                                 onChange={(e) => { onValuesChange(e) }}
-                                placeholder='Occupation'
                                 className={`${customerError.includes("occupation") ? "Mui-error" : ""}`}
                             >
-                            {occupations.map((occupation)=>
-                                <MenuItem selected key={occupation.id} value={occupation.id}>{occupation.occupationName}</MenuItem>
-                            )}
+                                {occupations.map((occupation) =>
+                                    <MenuItem selected key={occupation.id} value={occupation.id}>{occupation.occupationName}</MenuItem>
+                                )}
                             </Select>
                         </Grid>
                     </Grid>

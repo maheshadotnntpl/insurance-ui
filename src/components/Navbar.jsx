@@ -1,21 +1,40 @@
 import * as React from 'react';
-import {AppBar, Box, Toolbar, IconButton, Typography,Menu, Container, Button, MenuItem } from '@mui/material';
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem, Avatar, Tooltip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { useAuth } from '../utils/auth'
+import { useNavigate } from 'react-router-dom'
 
 const pages = ['calculate-premium'];
+const settings = ['Logout'];
 
 export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const auth = useAuth();
+  const navigate = useNavigate()
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    auth.logout();
+    navigate('login');
+    localStorage.removeItem('token');
+  }
 
   return (
     <AppBar position="static">
@@ -26,7 +45,7 @@ export const Navbar = () => {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="calculate-premium"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -72,7 +91,7 @@ export const Navbar = () => {
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Link style={{textDecoration:"none", color:"white"}} to={`/${page}`}>{page}</Link>
+                    <Link style={{ textDecoration: "none", color: "white" }} to={`/${page}`}>{page}</Link>
                   </Typography>
                 </MenuItem>
               ))}
@@ -83,7 +102,7 @@ export const Navbar = () => {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="calculate-premium"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -104,11 +123,41 @@ export const Navbar = () => {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-               <Link style={{textDecoration:"none", color:"white"}} to={`/${page}`}>{page}</Link>
+                <Link style={{ textDecoration: "none", color: "white" }} to={`/${page}`}>{page}</Link>
               </Button>
             ))}
           </Box>
 
+          {auth.user && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography onClick={() => handleLogout()} textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>)}
         </Toolbar>
       </Container>
     </AppBar>
